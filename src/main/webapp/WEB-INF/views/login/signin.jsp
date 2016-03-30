@@ -122,7 +122,6 @@ $(function() {
     </div>
 </div>
 		<form action="<c:url value="/kakao/userinfo"/>" name="kakao" method="get">
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		</form>
 		<form action="<c:url value="/auth/facebook"/>" name="facebook" method="get">
 			<input type="hidden" name="scope" value="public_profile,email"></input>

@@ -1,9 +1,6 @@
 # BootSocial
 Spring Boot Web with Spring Security and Social Login(Facebook,Twitter,Github,Kakao) Using Mysql<br>
-Description : 
-```
-http://blog.naver.com/wizardkyn/220670022848
-```
+Description : http://blog.naver.com/wizardkyn/220670022848
 
 # Environment
 Maven<br>

@@ -12,7 +12,6 @@ public class LoginController {
 	public String home() {
 		return "/index.jsp";
 	}
-	
 	@RequestMapping(value="/login.do")
 	public String userLogin(ModelMap model) {
 		return "/login/signin.jsp";

@@ -22,6 +22,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private LoginService loginService;
     
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/sb-admin-2-1.0.8/**","/webjars/**","/kakao/userinfo");
+	}
+	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -55,11 +60,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(loginService);
     }
-
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/sb-admin-2-1.0.8/**","/webjars/**","/kakao/userinfo");
-	}
 	
 	@Bean
 	public SocialUserDetailsService socialUserDetailsService() {

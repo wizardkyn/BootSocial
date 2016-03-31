@@ -1,5 +1,6 @@
 package com.example.web.login;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Controller
 public class KakaoController {
 
+	@Autowired
 	private RestOperations kakaoRestTemplate;
 	
 	@RequestMapping("/kakao/userinfo")
@@ -19,9 +21,5 @@ public class KakaoController {
 
 		System.out.println("result " + result);
 		return "redirect:/signup";	
-	}
-
-	public void setKakaoRestTemplate(RestOperations kakaoRestTemplate) {
-		this.kakaoRestTemplate = kakaoRestTemplate;
 	}
 }

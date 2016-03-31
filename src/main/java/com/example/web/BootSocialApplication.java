@@ -6,7 +6,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,9 +18,6 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.client.RestOperations;
-
-import com.example.web.login.KakaoController;
 
 @SpringBootApplication
 @MapperScan("com.example.web.sqlmappers")
@@ -47,14 +43,7 @@ public class BootSocialApplication {
 	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);
 	}
-	
-	@Bean
-	public KakaoController kakaoController(@Qualifier("kakaoRestTemplate") RestOperations kakaoRestTemplate) {
-		KakaoController controller = new KakaoController();
-		controller.setKakaoRestTemplate(kakaoRestTemplate);
-		return controller;
-	}
-	
+		
 	@Value("${kakao.restApiKey}")
 	private String kakaoRestApiKey;
 

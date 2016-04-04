@@ -7,12 +7,14 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import com.example.web.domain.SecurityUserVo;
 import com.example.web.domain.UserVo;
 import com.example.web.sqlmappers.login.LoginMapper;
 
@@ -28,30 +30,28 @@ public class LoginService implements UserDetailsService {
 		return userVo;
 	}
 
+	public UserVo getUserFromSocial(String userId) {
+		UserVo userVo = null;
+		if (userId != null && !"".equals(userId)) userVo = loginMapper.getUserFromSocial(userId);
+		return userVo;
+	}
+
+	public UserDetails loadUserBySocial(String userId) throws UsernameNotFoundException {
+		
+		UserVo domainUser = getUserFromSocial(userId);
+		if (domainUser == null) throw new UsernameNotFoundException("Not Found ID : " + userId);
+		
+		return new SecurityUserVo(domainUser.getUserId(), domainUser.getPassWd()
+				, AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_SOCIAL"));
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-		try {
-			UserVo domainUser = getUser(userId);
-
-			boolean enabled = true;
-			boolean accountNonExpired = true;
-			boolean credentialsNonExpired = true;
-			boolean accountNonLocked = true;
-			
-			if (domainUser == null) throw new UsernameNotFoundException("Not Found ID : " + userId);
-			
-			return new User(
-					domainUser.getUserId(),
-					domainUser.getPassWd(),
-					enabled,
-					accountNonExpired,
-					credentialsNonExpired,
-					accountNonLocked,
-					getAuthorities(1));
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		
+		UserVo domainUser = getUser(userId);
+		if (domainUser == null) throw new UsernameNotFoundException("Not Found ID : " + userId);
+		
+		return new SecurityUserVo(domainUser.getUserId(),domainUser.getPassWd(),getAuthorities(1));
 	}
 	
 	/**
@@ -95,4 +95,5 @@ public class LoginService implements UserDetailsService {
 		}
 		return authorities;
 	}
+
 }

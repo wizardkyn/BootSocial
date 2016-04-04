@@ -3,7 +3,6 @@ package com.example.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,7 +18,8 @@ import com.example.web.login.SocialUserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+
+	@Autowired
     private LoginService loginService;
     
 	@Override
@@ -27,12 +27,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/sb-admin-2-1.0.8/**","/webjars/**","/kakao/userinfo");
 	}
 	
-    @Override
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            	.antMatchers("/","/signup").permitAll()
-                .antMatchers("/web/**").hasRole("USER")
+            	.antMatchers("/signup").permitAll()
+                .antMatchers("/web/**").access("hasRole('USER') or hasRole('SOCIAL')")
                 .antMatchers("/backend/**").access("hasRole('USER') and hasRole('ADMIN')") 
                 .anyRequest().authenticated()
                 .and()
@@ -65,10 +65,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public SocialUserDetailsService socialUserDetailsService() {
 		return new SocialUserDetailsServiceImpl(loginService);
 	}
-
-	@Bean
-	@Override
-	public AuthenticationManager authenticationManagerBean() throws Exception {
-		return super.authenticationManagerBean();
-	}	
 }

@@ -22,17 +22,19 @@ public class SignupController {
 	private ProviderSignInUtils providerSignInUtils;
 
 	@RequestMapping(value="/signup", method=RequestMethod.GET)
-	public String signup(ModelMap model,
-			@AuthenticationPrincipal SocialUserDetails userDetail
-			,WebRequest request) {
+	public String signup(ModelMap model,WebRequest request) {
 		
+		// TODO : make SignUpForm from providerSignInUtils
 		Connection<?> connection = providerSignInUtils.getConnectionFromSession(request);
 		if (connection != null) {
 			UserProfile socialMediaProfile = connection.fetchUserProfile();
+			System.out.println("Username " + socialMediaProfile.getUsername());
+
+			String providerId = connection.getKey().getProviderId();
+			System.out.println("providerId " + providerId);
+			String providerUserId = connection.getKey().getProviderUserId();
+			System.out.println("providerUserId " + providerUserId);
 		}
-		
-		String userId = (userDetail != null)? userDetail.getUsername():"";
-		System.out.println("userId " + userId);
 
 		return "/login/signup.jsp";	
 	}
@@ -41,6 +43,7 @@ public class SignupController {
 	public String signupProc(ModelMap model
 			,@ModelAttribute("form") SignUpForm form) {
 		
+		// TODO : insert user infor into DB
 		return "redirect:/login.do";
 	}
 }

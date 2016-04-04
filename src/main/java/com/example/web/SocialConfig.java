@@ -11,8 +11,10 @@ import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurer;
+import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
 import org.springframework.social.connect.web.ConnectController;
@@ -57,20 +59,30 @@ public class SocialConfig implements SocialConfigurer {
 	public UserIdSource getUserIdSource() {
 		return new AuthenticationNameUserIdSource();
 	}
-
+	
 	@Override
 	public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
 		JdbcUsersConnectionRepository repository =  new JdbcUsersConnectionRepository(dataSource,connectionFactoryLocator,Encryptors.noOpText());
-        return repository;
+		repository.setConnectionSignUp(new ImplicitConnectionSignup());
+		return repository;
     }
 
+	private static class ImplicitConnectionSignup implements ConnectionSignUp {
+		@Override
+		public String execute(Connection<?> connection) {
+			return connection.getKey().getProviderUserId();
+		}
+	}
+
 	@Bean
-	public ConnectController connectController(ConnectionFactoryLocator connectionFactoryLocator, ConnectionRepository connectionRepository) {
+	public ConnectController connectController(ConnectionFactoryLocator connectionFactoryLocator,
+			ConnectionRepository connectionRepository) {
 		return new ConnectController(connectionFactoryLocator, connectionRepository);
 	}
-	
+
 	@Bean
-	public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository) {
+	public ProviderSignInUtils providerSignInUtils(ConnectionFactoryLocator connectionFactoryLocator,
+			UsersConnectionRepository usersConnectionRepository) {
 		return new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository);
 	}
 }

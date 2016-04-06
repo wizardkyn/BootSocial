@@ -24,52 +24,52 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableOAuth2Client
 public class BootSocialApplication {
-	
-	public static void main(String[] args) {
-		SpringApplication.run(BootSocialApplication.class, args);
-	}
-	
-	@Bean
-	public SqlSessionFactory sqlSessionFatory(DataSource datasource) throws Exception {
-		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-		sqlSessionFactory.setDataSource(datasource);
-		sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-		sqlSessionFactory.setMapperLocations(
-				new PathMatchingResourcePatternResolver().getResources("classpath:META-INF/sqlmaps/**/*.xml"));
-		return (SqlSessionFactory) sqlSessionFactory.getObject();
-	}
 
-	@Bean
-	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
-		return new SqlSessionTemplate(sqlSessionFactory);
-	}
-		
-	@Value("${kakao.restApiKey}")
-	private String kakaoRestApiKey;
+    public static void main(String[] args) {
+        SpringApplication.run(BootSocialApplication.class, args);
+    }
 
-	@Value("${kakao.accessTokenUri}")
-	private String kakaoAccessTokenUri;
+    @Bean
+    public SqlSessionFactory sqlSessionFatory(DataSource datasource) throws Exception {
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(datasource);
+        sqlSessionFactory.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
+        sqlSessionFactory.setMapperLocations(
+                new PathMatchingResourcePatternResolver().getResources("classpath:META-INF/sqlmaps/**/*.xml"));
+        return (SqlSessionFactory) sqlSessionFactory.getObject();
+    }
 
-	@Value("${kakao.userAuthorizationUri}")
-	private String kakaoUserAuthorizationUri;
+    @Bean
+    public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
 
-	@Value("${kakao.redirectUri}")
-	private String kakaoRedirectUri;
+    @Value("${kakao.restApiKey}")
+    private String kakaoRestApiKey;
 
-	@Bean
-	public OAuth2ProtectedResourceDetails kakao() {
-		AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
-		details.setId("kakao");
-		details.setClientId(kakaoRestApiKey);
-		details.setAccessTokenUri(kakaoAccessTokenUri);
-		details.setUserAuthorizationUri(kakaoUserAuthorizationUri);
-		details.setPreEstablishedRedirectUri(kakaoRedirectUri);
-		details.setTokenName("access_token");
-		return details;
-	}
-	
-	@Bean
-	public OAuth2RestTemplate kakaoRestTemplate(OAuth2ClientContext clientContext) {
-		return new OAuth2RestTemplate(kakao(), clientContext);
-	}
+    @Value("${kakao.accessTokenUri}")
+    private String kakaoAccessTokenUri;
+
+    @Value("${kakao.userAuthorizationUri}")
+    private String kakaoUserAuthorizationUri;
+
+    @Value("${kakao.redirectUri}")
+    private String kakaoRedirectUri;
+
+    @Bean
+    public OAuth2ProtectedResourceDetails kakao() {
+        AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
+        details.setId("kakao");
+        details.setClientId(kakaoRestApiKey);
+        details.setAccessTokenUri(kakaoAccessTokenUri);
+        details.setUserAuthorizationUri(kakaoUserAuthorizationUri);
+        details.setPreEstablishedRedirectUri(kakaoRedirectUri);
+        details.setTokenName("access_token");
+        return details;
+    }
+
+    @Bean
+    public OAuth2RestTemplate kakaoRestTemplate(OAuth2ClientContext clientContext) {
+        return new OAuth2RestTemplate(kakao(), clientContext);
+    }
 }

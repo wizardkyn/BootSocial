@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,7 +37,7 @@ public class LoginService implements UserDetailsService {
 		return userVo;
 	}
 
-	public UserDetails loadUserBySocial(String userId) throws UsernameNotFoundException {
+	public UserDetails loadUserBySocial(String userId) throws UsernameNotFoundException, DataAccessException {
 		
 		UserVo domainUser = getUserFromSocial(userId);
 		if (domainUser == null) throw new UsernameNotFoundException("Not Found ID : " + userId);
@@ -46,7 +47,7 @@ public class LoginService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException, DataAccessException {
 		
 		UserVo domainUser = getUser(userId);
 		if (domainUser == null) throw new UsernameNotFoundException("Not Found ID : " + userId);

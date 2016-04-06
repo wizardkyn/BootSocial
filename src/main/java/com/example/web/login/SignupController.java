@@ -43,7 +43,7 @@ public class SignupController {
 	public String signupProc(ModelMap model
 			,@ModelAttribute("form") SignUpForm form) {
 		
-		// TODO : insert user infor into DB
+		// TODO : insert user info into DB
 		return "redirect:/login.do";
 	}
 }
